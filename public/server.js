@@ -39,15 +39,23 @@ app.post("/api/students", (req, res) => {
       rollbar.info(`new student ${name} has been added!!!`);
       res.status(200).send(students);
     } else if (name === "") {
-      rollbar.error("Empty string was entered for new student!!!");
-      res.status(400).send("You must enter a name.");
+      // rollbar.error("Empty string was entered for new student!!!");
+      // Custom Error: Empty name is not allowed
+      throw new Error("This is custom error. Empty name is not allowed");
+      //res.status(400).send("You must enter a name.");
     } else {
-      rollbar.error("Duplicate student name was entered!!!");
-      res.status(400).send("That student already exists.");
+      //rollbar.error("Duplicate student name was entered!!!");
+      //res.status(400).send("That student already exists.");
+      // Custom Error: Duplicate student name is not allowed
+      throw new Error(
+        "This is custom error. Duplicate student name is not allowed"
+      );
     }
   } catch (err) {
-    rollbar.critical("Failed to add student!!!");
-    console.log(err);
+    //rollbar.critical("Failed to add student!!!");
+    //console.log(err);
+    rollbar.error(err); // Log the custom error with Rollbar
+    res.status(400).send(err.message); // Send the error message to the client
   }
 });
 
