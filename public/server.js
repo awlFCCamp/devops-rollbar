@@ -66,7 +66,20 @@ app.delete("/api/students/:index", (req, res) => {
   rollbar.info(`${name} has been deleted!!!`);
   res.status(200).send(students);
 });
+app.get("/api/critical-error", (req, res) => {
+  try {
+    // Simulate a critical error (e.g., accessing an undefined variable)
+    throw new Error("This is a critical error!");
+  } catch (error) {
+    // Log the critical error with Rollbar
+    rollbar.critical(error);
 
+    // Respond to the client with an error message
+    res
+      .status(500)
+      .send("A critical error occurred. Please check the server logs.");
+  }
+});
 const port = process.env.PORT || 5050;
 
 app.listen(port, () => console.log(`Server listening on ${port}`));
