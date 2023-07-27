@@ -12,17 +12,17 @@ var rollbar = new Rollbar({
 });
 
 // record a generic message and send it to Rollbar
-rollbar.log("Hello world!");
+rollbar.log("Hello world! Rollbar connect to aws app!");
 
 const students = ["Jimmy", "Timothy", "Jimothy"];
 
 app.get("/", (req, res) => {
-  rollbar.info("User has entered main page...");
+  rollbar.info("User has entered main page!!!");
   res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 app.get("/api/students", (req, res) => {
-  rollbar.warning("list of students was requested");
+  rollbar.warning("list of students was requested!!!");
   res.status(200).send(students);
 });
 
@@ -36,25 +36,26 @@ app.post("/api/students", (req, res) => {
   try {
     if (index === -1 && name !== "") {
       students.push(name);
-      rollbar.info(`new student ${name} has been added`);
+      rollbar.info(`new student ${name} has been added!!!`);
       res.status(200).send(students);
     } else if (name === "") {
-      rollbar.error("Empty string was entered for new student");
+      rollbar.error("Empty string was entered for new student!!!");
       res.status(400).send("You must enter a name.");
     } else {
-      rollbar.error("Duplicate student name was entered");
+      rollbar.error("Duplicate student name was entered!!!");
       res.status(400).send("That student already exists.");
     }
   } catch (err) {
-    rollbar.critical("Failed to add student");
+    rollbar.critical("Failed to add student!!!");
     console.log(err);
   }
 });
 
 app.delete("/api/students/:index", (req, res) => {
   const targetIndex = +req.params.index;
-
+  const name = students[targetIndex];
   students.splice(targetIndex, 1);
+  rollbar.info(`${name} has been deleted!!!`);
   res.status(200).send(students);
 });
 
